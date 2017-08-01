@@ -41,6 +41,7 @@ int end_zyncoder();
 
 int zynmidi_set_control(unsigned char chan, unsigned char ctrl, unsigned char val);
 int zynmidi_set_program(unsigned char chan, unsigned char pgrm);
+int zynmidi_set_rpn(unsigned char chan, unsigned int rpn, unsigned int data);
 
 //-----------------------------------------------------------------------------
 // GPIO Switches

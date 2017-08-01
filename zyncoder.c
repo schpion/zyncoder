@@ -198,6 +198,25 @@ int end_zyncoder_osc() {
 }
 
 //-----------------------------------------------------------------------------
+// RPN Message implementation
+//-----------------------------------------------------------------------------
+
+int zynmidi_set_rpn(unsigned char chan, unsigned int rpn, unsigned int data) {
+	int result;
+	result = zynmidi_set_control(chan, 0x65, (rpn>>7)&0x7F);	// RPN MSB
+	if (result) return result;
+	result = zynmidi_set_control(chan, 0x64, (rpn)&0x7F);		// RPN LSB
+	if (result) return result;
+	// Handle RPN & NRPN Reset (RPN MSB==0x7F & RPN LSB==0x7F)
+	if (rpn&0x3FFF != 0x3FFF) {
+		result = zynmidi_set_control(chan, 0x06, (data>>7)&0x7F);	// Data MSB
+		if (result) return result;
+		result = zynmidi_set_control(chan, 0x26, (data)&0x7F);		// Data LSB
+	}
+	return result;
+}
+
+//-----------------------------------------------------------------------------
 // Alsa MIDI processing
 //-----------------------------------------------------------------------------
 #ifdef USE_ALSASEQ_MIDI
